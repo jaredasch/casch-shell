@@ -4,29 +4,40 @@
 #include <string.h>
 #include <sys/wait.h>
 
-char ** parse_args( char * line ){
+char ** parse_args( char * line ){ //returns array of args (NULL terminated)
     int end = strlen(line) - 1;
     if(line[end] == '\n'){
         line[end] = '\0';
     }
-    
-	char ** arglist = calloc(sizeof(char*), 25); // 25 args max
-	for(int i = 0; (arglist[i] = strsep(&line, " ")); i++);
-	return arglist;
+
+	  char ** arglist = calloc(sizeof(char*), 25); // 25 args max
+    for(int i = 0; (arglist[i] = strsep(&line, " ")); i++);
+    return arglist;
 }
 
-void custom_commands(char ** args){
+char ** parse_commands(char * cmd_buffer){ //returns array of commands separated by ;
+      char ** command_list = calloc(sizeof(char**), 100); //100 commands per line max
+      for(int i = 0; (command_list[i] = strsep(&cmd_buffer, ";")); i++);
+      return command_list;
+}
+
+int custom_commands(char ** args){
     if(!strcmp(args[0], "exit")){
         exit(0);
-    } else if(!strcmp(args[0], "exit")){
+        return 1;
+    } else if(!strcmp(args[0], "cd")){
         chdir(args[1]);
+        return 1;
     }
+    return 0;
 }
 
 void fork_exec(char ** args){
-    custom_commands(args);
+    if (custom_commands(args)){
+      return;
+    }
     int f = fork();
-    if (f){ //PARENT 
+    if (f){ //PARENT
         int status, childpid;
         childpid = wait(&status);
     }
