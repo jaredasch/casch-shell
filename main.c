@@ -3,26 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
-
-char ** parse_args( char * line ){ //returns array of args (NULL terminated)
-    int end = strlen(line) - 1;
-    if(line[end] == '\n'){
-        line[end] = '\0';
-    }
-
-	  char ** arglist = calloc(sizeof(char*), 25); // 25 args max
-    for(int i = 0; (arglist[i] = strsep(&line, " ")); i++);
-    return arglist;
-}
-
-char ** parse_commands(char * cmd_buffer){ //returns array of commands separated by ;
-    int end = strlen(cmd_buffer) - 1;
-    cmd_buffer[end] = '\0';
-
-    char ** command_list = calloc(sizeof(char**), 100); //100 commands per line max
-    for(int i = 0; (command_list[i] = strsep(&cmd_buffer, ";")); i++);
-    return command_list;
-}
+#include "parsing.h"
 
 int custom_commands(char ** args){
     if(!strcmp(args[0], "exit")){
@@ -56,10 +37,18 @@ void fork_exec(char ** args){
 int main(){
     char * cmd_buffer = calloc(1, 100);
     while(1){
-        printf("casch$ ");
+        char * cwd_buffer = calloc(1, 100);
+        getcwd(cwd_buffer, 100);
+        printf("%s casch$ ", cwd_buffer);
+        
         fgets(cmd_buffer, 100, stdin);
-        char ** args = parse_args(cmd_buffer);
-        fork_exec(args);
+        char ** cmds = parse_line(cmd_buffer);
+        for(int i = 0; cmds[i]; i++){   // Iterate through commands
+            char ** args = parse_args(cmds[i]);
+            fork_exec(args);
+        }
+        free(cwd_buffer);
     }
+    free(cmd_buffer);
     return 0;
 }
