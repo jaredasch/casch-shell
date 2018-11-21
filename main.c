@@ -46,7 +46,7 @@ void fork_exec(char ** args){
     }
     else{ //CHILD
         if (execvp(args[0], args) == -1){
-          printf("--command not found--\n");
+          printf("-casch: %s: --command not found--\n",args[0]);
           exit(0);
         }
     }
