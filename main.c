@@ -16,9 +16,12 @@ char ** parse_args( char * line ){ //returns array of args (NULL terminated)
 }
 
 char ** parse_commands(char * cmd_buffer){ //returns array of commands separated by ;
-      char ** command_list = calloc(sizeof(char**), 100); //100 commands per line max
-      for(int i = 0; (command_list[i] = strsep(&cmd_buffer, ";")); i++);
-      return command_list;
+    int end = strlen(cmd_buffer) - 1;
+    cmd_buffer[end] = '\0';
+
+    char ** command_list = calloc(sizeof(char**), 100); //100 commands per line max
+    for(int i = 0; (command_list[i] = strsep(&cmd_buffer, ";")); i++);
+    return command_list;
 }
 
 int custom_commands(char ** args){
@@ -42,7 +45,10 @@ void fork_exec(char ** args){
         childpid = wait(&status);
     }
     else{ //CHILD
-        execvp(args[0], args);
+        if (execvp(args[0], args) == -1){
+          printf("--command not found--\n");
+          exit(0);
+        }
     }
     return;
 }
