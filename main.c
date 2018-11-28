@@ -1,29 +1,50 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 #include <sys/wait.h>
 #include "parsing.h"
 
-int custom_commands(char ** args){
-    if(!strcmp(args[0], "exit")){
+int parent_cmds(char ** args){
+    if(!strcmp(args[0], "exit")){ //exit
         exit(0);
         return 1;
-    } else if(!strcmp(args[0], "cd")){
+    }
+    else if(!strcmp(args[0], "cd")){ //CD
         if (chdir(args[1])){
           printf("-casch: %s: --directry not found--\n",args[1]);
         }
         return 1;
     }
-    else if(!strcmp(args[0], "h")){
-      printf("ha ha\n");
-      return 1;
-    }
     return 0;
 }
 
+void parse_redir(char ** args){
+  for(int i = 0; args[i]; i++){   // Iterate through args
+      if(!strcmp(args[i],">")){
+          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
+          int f = open(args[i+1], O_WRONLY | O_CREAT, 0777);
+          dup2(f, 1);
+          return;
+      }
+      if(!strcmp(args[i],">>")){
+          args[i] = NULL;
+          int f = open(args[i+1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+          dup2(f, 1);
+          return;
+      }
+      if(!strcmp(args[i],"<")){
+
+      }
+      if(!strcmp(args[i],"|")){
+
+      }
+    }
+}
+
 void fork_exec(char ** args){
-    if (custom_commands(args)){
+    if (parent_cmds(args)){
       return;
     }
     int f = fork();
@@ -32,6 +53,7 @@ void fork_exec(char ** args){
         childpid = wait(&status);
     }
     else{ //CHILD
+        parse_redir(args);
         if (execvp(args[0], args) == -1){
           printf("-casch: %s: --command not found--\n",args[0]);
           exit(0);
