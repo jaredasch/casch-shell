@@ -35,7 +35,22 @@ void parse_redir(char ** args){
           return;
       }
       if(!strcmp(args[i],"<")){
-
+          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
+          int f = open(args[i+1], O_RDONLY);
+          dup2(f, 0);
+          return;
+      }
+      if(!strcmp(args[i],"2>")){
+          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
+          int f = open(args[i+1], O_WRONLY | O_CREAT, 0777);
+          dup2(f, 2);
+          return;
+      }
+      if(!strcmp(args[i],"2>>")){
+          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
+          int f = open(args[i+1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+          dup2(f, 2);
+          return;
       }
       if(!strcmp(args[i],"|")){
 
