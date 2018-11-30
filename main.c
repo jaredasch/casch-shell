@@ -20,55 +20,68 @@ int parent_cmds(char ** args){
     return 0;
 }
 
-void parse_redir(char ** args){
-  for(int i = 0; args[i]; i++){   // Iterate through args
+char** parse_redir(char ** args){
+  int i = 0;
+  int ray[5]; //contains all indicies of <,> etc in args
+  int n = -1; //counter for size of ray
+
+  while(args[i]){   // Iterate through args
       if(!strcmp(args[i],">")){
-          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
-          int f = open(args[i+1], O_WRONLY | O_CREAT, 0777);
+          n++;
+          ray[n] = i;
+          int f = open(args[i+1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
           dup2(f, 1);
-          return;
       }
       if(!strcmp(args[i],">>")){
-          args[i] = NULL;
+          n++;
+          ray[n] = i;
           int f = open(args[i+1], O_WRONLY | O_CREAT | O_APPEND, 0777);
           dup2(f, 1);
-          return;
       }
       if(!strcmp(args[i],"<")){
-          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
+          n++;
+          ray[n] = i;
           int f = open(args[i+1], O_RDONLY);
           dup2(f, 0);
-          return;
       }
       if(!strcmp(args[i],"2>")){
-          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
-          int f = open(args[i+1], O_WRONLY | O_CREAT, 0777);
+          n++;
+          ray[n] = i;
+          int f = open(args[i+1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
           dup2(f, 2);
-          return;
       }
       if(!strcmp(args[i],"2>>")){
-          args[i] = NULL; //replaces > with NULL so execvp doesnt execute > as an arg
+          n++;
+          ray[n] = i;
           int f = open(args[i+1], O_WRONLY | O_CREAT | O_APPEND, 0777);
           dup2(f, 2);
-          return;
       }
-      if(!strcmp(args[i],"|")){
-
-      }
+      i++;
     }
+    while(n>-1){ //sets args[x] to NULL for every x in ray, so execvp doesnt execute <,> ect as an argument
+      args[ray[n]] = NULL;
+      n--;
+    }
+    return args;
 }
 
 void fork_exec(char ** args){
+    if (args[0] == NULL){
+      return;
+    }
     if (parent_cmds(args)){
       return;
     }
+    int fds[2];
+    pipe(fds);
+
     int f = fork();
     if (f){ //PARENT
         int status, childpid;
         childpid = wait(&status);
     }
     else{ //CHILD
-        parse_redir(args);
+        args = parse_redir(args);
         if (execvp(args[0], args) == -1){
           printf("-casch: %s: --command not found--\n",args[0]);
           exit(0);
