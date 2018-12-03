@@ -65,15 +65,59 @@ char** parse_redir(char ** args){
     return args;
 }
 
+int is_piped(char ** args){ //checks if there is a pipe
+  int i = 0;
+  while(args[i]){
+    if(!strcmp(args[i],"|")){
+      return 1;
+    }
+    i++;
+  }
+  return 0;
+}
+
+void pipe_exec(char ** args){
+    char*** pipesides = parse_pipe(args);
+    //printf("%s\n", pipesides[0][0]);
+    int fds[2];
+    pipe(fds);
+
+    int f = fork();
+    if (f){
+        int f2 = fork();
+        if(f2){ //PARENT
+          int status;
+          close(fds[0]);
+          close(fds[1]);
+          waitpid(f2,&status, 0);
+        }
+        else{ //CHILD 2
+          close(fds[1]);
+          dup2(fds[0], 0); //dups STDIN to read end of pipe
+          execvp(pipesides[1][0], pipesides[1]);
+          close(fds[0]);
+        }
+    }
+    else{ //CHILD 1
+        close(fds[0]);
+        dup2(fds[1], 1); //dups STDOUT to write end of pipe
+        execvp(pipesides[0][0], pipesides[0]);
+        close(fds[1]);
+    }
+    return;
+}
+
 void fork_exec(char ** args){
     if (args[0] == NULL){
+      return;
+    }
+    if(is_piped(args)){
+      pipe_exec(args);
       return;
     }
     if (parent_cmds(args)){
       return;
     }
-    int fds[2];
-    pipe(fds);
 
     int f = fork();
     if (f){ //PARENT

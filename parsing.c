@@ -24,6 +24,26 @@ char ** parse_line( char * line ){ //returns array of args (NULL terminated)
     return cmd_list;
 }
 
+char *** parse_pipe(char** args){ //breaks args on | into two executable command arrays
+  char ** side1 = calloc(sizeof(char*), 25);
+  char ** side2 = calloc(sizeof(char*), 25);
+  char *** ans = calloc(sizeof(char**),2);
+  int i = 0;
+  while(strcmp(args[i],"|")){
+    side1[i] = args[i];
+    i++;
+  }
+  i++;
+  int n = 0;
+  while(args[i]){
+    side2[n] = args[i];
+    i++;
+    n++;
+  }
+  ans[0] = side1;
+  ans[1] = side2;
+  return ans;
+}
 
 char ** parse_args( char * cmd ){
     char ** arg_list = calloc(sizeof(char*), 25);

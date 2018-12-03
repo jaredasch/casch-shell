@@ -5,4 +5,6 @@ char ** parse_line( char * );
 
 char ** parse_args( char * );
 
+char *** parse_pipe(char ** );
+
 #endif
