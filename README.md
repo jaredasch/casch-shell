@@ -2,14 +2,14 @@ casch
 by Colin Hosking and Jared Asch
 
 Features:
-	Forks and executes commands!
-	Executes multiple commands separated by ; 
-	Redirects using >, >>, <, <<
-  Handles single pipes (|)
-	Ignores any additional whitespace the user inupts
-  Changes working directory using cd
-  Prints a funny joke when the user inputs "joke"
-  Exits when the user inputs "exit"
+-Forks and executes commands!
+-Executes multiple commands separated by ; 
+-Redirects using >, >>, <, <<
+-Handles single pipes (|)
+-Ignores any additional whitespace the user inupts
+-Changes working directory using cd
+-Prints a funny joke when the user inputs "joke"
+-Exits when the user inputs "exit"
   
 Attempted:
 	History
