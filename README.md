@@ -1,5 +1,5 @@
-# casch
-by Colin Hosking and Jared Asch
+# casch \n
+by Colin Hosking and Jared Asch \n
 
 Features:
 -Forks and executes commands!
