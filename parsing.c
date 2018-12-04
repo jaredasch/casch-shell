@@ -24,6 +24,15 @@ char ** parse_line( char * line ){ //returns array of args (NULL terminated)
     return cmd_list;
 }
 
+/*======== char *** parse_pipe() ==========
+	Inputs:  char**args
+	Returns: An array of command/argument arrays
+    Inner Workings: 
+        Creates two arrays of strings called side1, side2
+        Copies all commands/arguments in args before the "|" into side1
+        Copies all commands/arguments in args after the "|" into side2
+        Creates char*** ans, puts side1 and side2 in ans, and returns ans
+	====================*/
 char *** parse_pipe(char** args){ //breaks args on | into two executable command arrays
   char ** side1 = calloc(sizeof(char*), 25);
   char ** side2 = calloc(sizeof(char*), 25);
