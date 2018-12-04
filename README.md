@@ -1,5 +1,5 @@
 # casch-shell by Colin Hosking and Jared Asch #
-
+Running `make test` runs casch-shell with test commands as input 
 ## Features ##
 * Forks and executes commands!
 * Executes multiple commands separated by ;
