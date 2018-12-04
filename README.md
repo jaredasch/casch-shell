@@ -18,7 +18,7 @@ Running `make test` runs casch-shell with test commands as input
     * Deciding what to index was going to be challenging, would need to dynamically index based on the current directory and already entered commands
 
 ## Known Bugs ##
-* Putting two ;'s next to each other will break the parser
+* Putting two ;'s next to each other will break the parser, but only if directly next to each other
 * When running commands from file with `./out < test_commands`, command prompt still displays multiple times after commands are executed
 
 ## Files & Function Headers ##
