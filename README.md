@@ -2,24 +2,24 @@
 Running `make test` runs casch-shell with test commands as input 
 ## Features ##
 * Forks and executes commands!
-* Executes multiple commands separated by ;
-* Redirects using >, >>, <, <<
+* Prints out error message when command or file is not found
+* Executes multiple commands separated by ;, even if the command is not found
+* Redirects using >, >>, <, <<, 2>, 2>>
 * Handles single pipes (|)
 * Ignores any additional whitespace the user inputs
 * Changes working directory using cd
 * Prints a funny joke when the user inputs "joke"
 * Exits when the user inputs "exit"
 
-## Attempted ##
+## Features Attempted ##
 * History
 * Tab completion
-    * Was planning to implement a trie data structure, which is similar to a tree, except each node is a character, and autocomplete would look at the current node and check for further nodes
+    * Was planning to implement a tree data structure, which is similar to a tree, except each node is a character, and autocomplete would look at the current node and check for further nodes
     * Deciding what to index was going to be challenging, would need to dynamically index based on the current directory and already entered commands
 
-## Bugs ##
+## Known Bugs ##
 * Putting two ;'s next to each other will break the parser
-* Redirecting to a file that does not exist occasionally does not work
-* When running commands from file with `./out < test_commands`, command prompt still displays after commands are executed
+* When running commands from file with `./out < test_commands`, command prompt still displays multiple times after commands are executed
 
 ## Files & Function Headers ##
 
@@ -53,6 +53,18 @@ Running `make test` runs casch-shell with test commands as input
         Checks if args[0] is "exit", exits shell if it is
         Checks if args[0] is "cd", changes directory if it is
         Otherwise returns 0
+	====================*/
+```
+```
+/*======== void main() ==========
+	Inputs: ---
+	Returns: 0 if nothing broke
+    Inner Workings:
+        Prints out current working directory
+        Reads stdin into cmd_buffer until a newline is encountered
+        Split the cmd_buffer on instances of ";", creating an array of commands cmds
+        Executes each command in cmds after splitting it on the whitespace to create an array of arguments
+        Repeats
 	====================*/
 ```
 

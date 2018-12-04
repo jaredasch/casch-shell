@@ -27,6 +27,12 @@ int parent_cmds(char ** args){
         }
         return 1;
     }
+    else if(!strcmp(args[0], "joke")){
+        printf("Why didn't the chicken cross the road?\n");
+        sleep(2 );
+        printf("Because he couldn't redirect the traffic :)\n");
+        return 1;
+    }
     return 0;
 }
 
@@ -59,6 +65,10 @@ char** parse_redir(char ** args){
           n++;
           ray[n] = i;
           int f = open(args[i+1], O_RDONLY);
+          if (f == -1){
+              printf("-casch: %s: --file not found--\n",args[i+1]);
+              exit(0);
+          }
           dup2(f, STDIN_FILENO);
       }
       if(!strcmp(args[i],"2>")){
@@ -119,9 +129,19 @@ void fork_exec(char ** args){
     return;
 }
 
+/*======== void main() ==========
+	Inputs: ---
+	Returns: 0 if nothing broke
+    Inner Workings:
+        Prints out current working directory
+        Reads stdin into cmd_buffer until a newline is encountered
+        Split the cmd_buffer on instances of ";", creating an array of commands cmds
+        Executes each command in cmds after splitting it on the whitespace to create an array of arguments
+        Repeats
+	====================*/
 int main(){
-    char ** history = calloc(50, 100); //stores up to 100 commands of 50 chars max
-    int hist_size = 0;
+    //char ** history = calloc(50, 100); //stores up to 100 commands of 50 chars max
+    //int hist_size = 0;
     char * cmd_buffer = calloc(1, 100);
     while(1){
         char * cwd_buffer = calloc(1, 100);
@@ -129,8 +149,8 @@ int main(){
         printf("%s casch$ ", cwd_buffer);
 
         fgets(cmd_buffer, 100, stdin);
-        history[hist_size] = cmd_buffer;
-        hist_size++;
+        //history[hist_size] = cmd_buffer;
+        //hist_size++;
 
         char ** cmds = parse_line(cmd_buffer);
         for(int i = 0; cmds[i]; i++){   // Iterate through commands
@@ -139,7 +159,7 @@ int main(){
         }
         free(cwd_buffer);
     }
-    free(history);
+    //free(history);
     free(cmd_buffer);
     return 0;
 }
