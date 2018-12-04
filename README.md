@@ -17,7 +17,7 @@
 ## Bugs ##
 * Putting two ;'s next to each other will break the parser
 * Redirecting to a file that does not exist occasionally does not work
-* When running commands from file with `./out < commands`, command prompt still displays after commands are executed
+* When running commands from file with `./out < test_commands`, command prompt still displays after commands are executed
 
 ## Files & Function Headers ##
 
@@ -83,7 +83,7 @@
 	====================*/
 ```
 
-#### piping.c - handles everything related to piping ####
+#### piping.c -- handles everything related to piping ####
 ```
 /*======== int ispiped() ==========
 	Inputs:  char **args
