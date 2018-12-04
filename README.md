@@ -5,7 +5,7 @@
 * Executes multiple commands separated by ;
 * Redirects using >, >>, <, <<
 * Handles single pipes (|)
-* Ignores any additional whitespace the user inupts
+* Ignores any additional whitespace the user inputs
 * Changes working directory using cd
 * Prints a funny joke when the user inputs "joke"
 * Exits when the user inputs "exit"
@@ -17,8 +17,43 @@
 ## Bugs ##
 * Putting two ;'s next to each other will break the parser
 * Redirecting to a file that does not exist occasionally does not work
+* When running commands from file with `./out < commands`, command prompt still displays after commands are executed
 
 ## Files & Function Headers ##
+
+#### main.c -- handles processes and file management for shell ####
+```
+/*======== void fork_exec() ==========
+	Inputs:  char ** args
+	Returns: ---
+    Inner Workings:
+        First checks if args is not NULL
+        Checks if parsing needs to care about pipes
+        Checks if the enetered command is one of our custom commands
+        Otherwise it forks off another process, parent waits for the child process to exit
+	====================*/
+```
+```
+/*======== void parse_redir() ==========
+	Inputs:  char ** args
+    Returns: A modified version of args with any redirection symbols replaced with NULL
+    Inner Workings:
+        Checks if each arg is a redirection symbol
+        If any indicates redirection, then the appropriate file is duped
+	====================*/
+```
+```
+/*======== void parent_cmds() ==========
+	Inputs:  char ** args
+    Returns: 1 if a custom command is found and run
+             0 if no custom command found
+    Inner Workings:
+        Checks if args[0] is "exit", exits shell if it is
+        Checks if args[0] is "cd", changes directory if it is
+        Otherwise returns 0
+	====================*/
+```
+
 #### parsing.c -- handles parsing of commands and arguments ####
 ```
 /*======== char * parse_line() ==========
@@ -48,7 +83,7 @@
 	====================*/
 ```
 
-#### main.c -- handles processes and file management for shell ####
+#### piping.c - handles everything related to piping ####
 ```
 /*======== int ispiped() ==========
 	Inputs:  char **args
@@ -71,16 +106,5 @@
         Child 2 closes the write end of the pipe, redirects STDIN to the read end of the pipe, then executes side 1 of the pipe
         Child 2 closes the read end of the pipe
         Parent closes both sides of the pipe, then waits until Child 2 finishes
-	====================*/
-```
-```
-/*======== void fork_exec() ==========
-	Inputs:  char ** args
-	Returns: ---
-    Inner Workings:
-        First checks if args is not NULL
-        Checks if parsing needs to care about pipes
-        Checks if the enetered command is one of our custom commands
-        Otherwise it forks off another process, parent waits for the child process to exit
 	====================*/
 ```
