@@ -35,7 +35,7 @@ int is_piped(char ** args){ //checks if there is a pipe
         Parent forks again
         Child 2 closes the write end of the pipe, redirects STDIN to the read end of the pipe, then executes side 1 of the pipe
         Child 2 closes the read end of the pipe
-        Parent closes both sides of the pipe, then waits until Child 2 finishes
+        Parent closes both sides of the pipe, then waits until Child 1/2 finishes
 	====================*/
 void pipe_exec(char ** args){
     char*** pipesides = parse_pipe(args);
@@ -51,6 +51,7 @@ void pipe_exec(char ** args){
           close(fds[0]);
           close(fds[1]);
           waitpid(f2,&status, 0);
+          waitpid(f,&status, 0);
         }
         else{ //CHILD 2
           close(fds[1]);

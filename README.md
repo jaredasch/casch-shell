@@ -107,6 +107,6 @@ Running `make test` runs casch-shell with test commands as input
         Parent forks again
         Child 2 closes the write end of the pipe, redirects STDIN to the read end of the pipe, then executes side 1 of the pipe
         Child 2 closes the read end of the pipe
-        Parent closes both sides of the pipe, then waits until Child 2 finishes
+        Parent closes both sides of the pipe, then waits until Child 1/2 finishes
 	====================*/
 ```
