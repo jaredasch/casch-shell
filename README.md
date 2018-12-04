@@ -13,6 +13,8 @@
 ## Attempted ##
 * History
 * Tab completion
+    * Was planning to implement a trie data structure, which is similar to a tree, except each node is a character, and autocomplete would look at the current node and check for further nodes
+    * Deciding what to index was going to be challenging, would need to dynamically index based on the current directory and already entered commands
 
 ## Bugs ##
 * Putting two ;'s next to each other will break the parser
