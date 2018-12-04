@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 
+/*======== char * parse_line() ==========
+	Inputs:  char * line
+	Returns: An array of command strings
+    Inner Workings:
+        Seperates a single command by semicolons into individual commands, using strsep(), to be passed to parse_args()
+	====================*/
 
 char ** parse_line( char * line ){ //returns array of args (NULL terminated)
     int end = strlen(line) - 1;
@@ -27,7 +33,7 @@ char ** parse_line( char * line ){ //returns array of args (NULL terminated)
 /*======== char *** parse_pipe() ==========
 	Inputs:  char**args
 	Returns: An array of command/argument arrays
-    Inner Workings: 
+    Inner Workings:
         Creates two arrays of strings called side1, side2
         Copies all commands/arguments in args before the "|" into side1
         Copies all commands/arguments in args after the "|" into side2
@@ -54,6 +60,12 @@ char *** parse_pipe(char** args){ //breaks args on | into two executable command
   return ans;
 }
 
+/*======== char ** parse_args() ==========
+	Inputs:  char * cmd
+	Returns: An array of string arguments of a single command
+    Inner Workings:
+        Seperates a single command by spaces into arguments, using strsep(), to be passed to execvp()
+	====================*/
 char ** parse_args( char * cmd ){
     char ** arg_list = calloc(sizeof(char*), 25);
     for(int i = 0; (arg_list[i] = strsep(&cmd, " ")); i++){

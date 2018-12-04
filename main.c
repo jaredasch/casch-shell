@@ -69,7 +69,7 @@ char** parse_redir(char ** args){
 	Inputs:  char **args
 	Returns: 1 if a "|" (pipe) is found in line
              0 if no pipe is found
-    Inner Workings: 
+    Inner Workings:
         Parses each element in args and checks if it is a pipe
 	====================*/
 int is_piped(char ** args){ //checks if there is a pipe
@@ -86,7 +86,7 @@ int is_piped(char ** args){ //checks if there is a pipe
 /*======== void pipe_exec() ==========
 	Inputs:  char **args
 	Returns: ---
-    Inner Workings: 
+    Inner Workings:
         executes parse_pipe(args), creating pipesides which contains the commands & args on both sides of the "|"
         Creates a pipe in the parent process, then forks
         Child 1 closes the read end of the pipe, redirects STDOUT to the write end of the pipe, then executes side 0 of the pipe
@@ -127,6 +127,15 @@ void pipe_exec(char ** args){
     return;
 }
 
+/*======== void fork_exec() ==========
+	Inputs:  char ** args
+	Returns: ---
+    Inner Workings:
+        First checks if args is not NULL
+        Checks if parsing needs to care about pipes
+        Checks if the enetered command is one of our custom commands
+        Otherwise it forks off another process, parent waits for the child process to exit
+	====================*/
 void fork_exec(char ** args){
     if (args[0] == NULL){
       return;
